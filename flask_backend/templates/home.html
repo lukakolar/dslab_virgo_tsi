@@ -1,0 +1,108 @@
+{% extends "layout.html" %}
+{% block content %}
+    <main role="main" class="container">
+        <div class="row">
+            <div class="col-12">
+                <h1>Dashboard</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <p class="text-muted">Import the data and then select it from the table to begin analysis.</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-6">
+                <h2>Loaded Data</h2>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="float-sm-right">
+                    <a id="importDataButton" class="btn btn-primary disabled" href="{{ url_for('import_data') }}">
+                        Import Dataset
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12" id="datasetTable"></div>
+        </div>
+    </main>
+    <footer class="fixed-bottom py-3 bg-light" style="display: none">
+        <div class="container">
+            <h5 class="text-center" id="jobName"></h5>
+            <p class="text-muted text-center" id="jobDescription"></p>
+            <div class="progress mx-auto" style="max-width: 600px; height: 8px">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                     id="progressBar" style="width: 0"></div>
+            </div>
+        </div>
+    </footer>
+{% endblock content %}
+
+{% block scripts %}
+    <!-- Periodical polling for updates -->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            let lastDBUpdate = 0;
+            let lastJobUpdate = 0;
+
+            let lastIsRunning = true;
+            let isFirst = true;
+
+            function update() {
+                $.get("{{ url_for('get_update') }}", function (data) {
+                    let newDBUpdate = data['last_db_update'];
+                    let newJobUpdate = data['last_job_update'];
+                    let isRunning = data['is_running'];
+
+                    if (newDBUpdate > lastDBUpdate) {
+                        $("#datasetTable").html(data['dataset_table']);
+                        lastDBUpdate = newDBUpdate;
+                    }
+
+                    if (newJobUpdate > lastJobUpdate) {
+                        $("#jobName").text(data['job_name']);
+                        $("#jobDescription").text(data['job_description']);
+                        $("#progressBar").width(data['job_percentage'] + "%");
+                        lastJobUpdate = newJobUpdate;
+                    }
+
+                    if (isFirst || isRunning !== lastIsRunning) {
+                        isFirst = false;
+                        lastIsRunning = isRunning;
+
+                        let $importDataButton = $("#importDataButton");
+                        let $selectButtons = $(".select-button");
+                        let $footer = $("footer");
+
+                        if (isRunning) {
+                            $importDataButton.addClass("disabled");
+                            $selectButtons.addClass("disabled");
+                            $footer.show();
+                        } else {
+                            let job_type = data['job_type'];
+                            $importDataButton.removeClass("disabled");
+                            $selectButtons.removeClass("disabled");
+
+                            if (job_type === "import") {
+                                $footer.fadeOut("slow");
+                            } else if (job_type === "analysis") {
+                                $("#jobDescription")
+                                    .html("<a id='viewResults' href='{{ url_for('results') }}'>View Results</a>");
+                            }
+                            //$footer.fadeOut("slow");
+                        }
+                    }
+
+                });
+            }
+
+            update();
+            setInterval(update, 2000);
+        });
+    </script>
+{% endblock %}
