@@ -6,10 +6,9 @@ This project is part of Data Science Lab at ETH Zurich. It was supervised by Pro
 Dr. Wolfgang Finsterle from PMOD/WRC Institute. Dataset description can be found at 
 https://www.pmodwrc.ch/en/research-development/space/virgo-soho/.
 
-Further explanation of results and methods are summarized in the project paper **Iterative Correction of Sensor 
-Degradation using Constrained Smooth Monotonic Functions and a Bayesian Multi-sensor Data Fusion Method applied to 
-TSI data from PMO6-V Radiometers** available at ```DSLab_project_paper.pdf```. Additionally, project poster can be found
-at ```DSLab_project_poster```.
+Further explanation of results and methods are summarized in the project paper **Iterative Correction of Sensor Degradation and a
+Bayesian Multi-Sensor Data Fusion Method applied to TSI Data from PMO6-V Radiometers** available at ```kolar_sikonja_treven_dslab_paper.pdf```. Additionally, project poster can be found
+at ```kolar_sikonja_treven_dslab_poster.pdf```.
 
 ## Installation
 * Install Miniconda (Python 3.x) from [Miniconda website](https://docs.conda.io/en/latest/miniconda.html)
