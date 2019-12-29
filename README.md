@@ -62,7 +62,7 @@ After running python script, in browser (preferably Google Chrome/Firefox) go to
 
 ### Data Analysis
 ```
-python data_analysis.py
+python run_data_analysis.py
    --data_file = "virgo"                       // Select file {"virgo", "virgo_tsi"}
 
    --sampling                                  // Sampling analysis.
